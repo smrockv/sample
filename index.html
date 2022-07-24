@@ -4,6 +4,64 @@
         <title>サンプルページ</title>
     </head>
 <body>
-    サンプルページ
+    <h1>サンプルページ</h1>
+    <form>
+        <p><span>ショップ名</span></p>
+        <input type="text" id="shop">
+        <p><span>商品名</span></p>
+        <input type="text" id="item"><br>
+        <p>
+        <button type="button" onclick="postData();">登録</button></p>
+    </form>
+    <hr>
+    <h2>商品一覧</h2>
+    <form>
+        <button type="button" onclick="getData();">取得</button></p>
+    </form>
+        <table id="tableList"></table>
+    <script>
+        const url = "https://script.google.com/macros/s/AKfycbyTUR6Kl9HiUkdv92UYItNpCEmqE6KpgEpiFbMiO9SkXMsAG1UlaODl1gI5GF4TbxH1/exec";
+        function getData() {
+            //const urlParam = "?text=yahoo"
+            //const param = {
+            //    "method"     : "GET",
+            //};
+            fetch(url)
+            .then(response => response.json())
+            .then(data => toDocument(data))
+            .catch((error) => {
+                console.error('Error:', error);
+              });
+        }
+        function toDocument(data) {
+            console.log(data);
+            const tableList = document.getElementById('tableList');
+            data.forEach(rec => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${rec.shop}</td><td>${rec.item}</td>`;
+                tableList.appendChild(row);
+            });
+        }
+        function postData() {
+            const data = {
+                "shop" : document.getElementById('shop').value,
+                "item" : document.getElementById('item').value,
+            };
+
+            const postparam = {
+                "method"     : "POST",
+                //"mode" : "no-cors",
+                "Content-Type" : "application/x-www-form-urlencoded",
+                "body" : JSON.stringify(data)
+            };
+
+            fetch(url, postparam)
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch((error) => {
+                console.error('Error:', error);
+              });
+        }
+    </script>
 </body>
 </html>
